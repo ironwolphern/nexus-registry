@@ -1,0 +1,37 @@
+name: nexus
+services:
+  nexus:
+    image: sonatype/nexus3:latest
+    container_name: nexus
+    restart: always
+    user: "root"
+    ports:
+      - "8443:8443"
+    secrets:
+        - source: nexus.properties
+          target: /nexus-data/etc/nexus.properties
+        - source: jetty-https.xml
+          target: /opt/sonatype/nexus/etc/jetty/jetty-https.xml
+        - source: keystore.jks
+          target: /nexus-data/etc/ssl/keystore.jks
+    environment:
+      INSTALL4J_ADD_VM_PARAMS: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m"
+    volumes:
+      - nexus_data:/nexus-data
+
+volumes:
+  nexus_data:
+    driver: local
+
+secrets:
+    jetty-https.xml:
+      file: /srv/config/nexus/jetty-https.xml
+    nexus.properties:
+      file: /srv/config/nexus/nexus.properties
+    keystore.jks:
+      file: /etc/letsencrypt/live/nexus.example.local/keystore.jks
+
+networks:
+  default:
+    external: true
+    name: Secure
