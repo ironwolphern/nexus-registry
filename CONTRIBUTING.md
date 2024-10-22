@@ -1,4 +1,4 @@
-# Contributing to the template-ansible
+# Contributing to the Nexus Registry
 
 Testers welcome!
 
